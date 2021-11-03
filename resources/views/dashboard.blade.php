@@ -1,12 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Customers') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         @can('isAdmin')
+        @if (\Session::has('message'))
+            <div class="alert alert-success" style="color:green; text-align:center;">
+                <ul>
+                    <li>{!! \Session::get('message') !!}</li>
+                </ul>
+            </div>
+        @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">                
                 <div class="m-6 space-x-3 text-center space-y-3">
@@ -28,15 +35,13 @@
                             <td>{{date('m-d-Y', strtotime($user->dob))}}</td>
                             <td>{{$user->workflow}}</td>
                             <td>
-                                <a class="underline text-sm text-blue-600" href="{{route('process.req', [$user, 3])}}"> Approve</a>
-                                <a class="underline text-sm text-red-600" href="{{route('process.req', [$user, 4])}}"> Reject</a>
+                                <a class="underline text-sm text-blue-600" href="{{route('process.req', [$user, 3])}}"> {{($user->work_flow_engine != 3 ? 'Approve' : '')}}</a>
+                                <a class="underline text-sm text-red-600" href="{{route('process.req', [$user, 4])}}"> {{($user->work_flow_engine != 4 ? 'Reject' : '')}}</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                     </table>
-                   <?php //echo "<pre>"; print_r($getusers);
-                   ?>
                     </a>
                 </div>
             </div>

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\work_flow_engine;
@@ -10,6 +8,9 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMailNotify;
+use Symfony\Component\HttpFoundation\Response;
 
 class RegisteredUserController extends Controller
 {
@@ -33,10 +34,14 @@ class RegisteredUserController extends Controller
             'dob' => $request->dob,
             'role' => $request->role
         ]);
-
         event(new Registered($user));
-
-        /* return redirect(RouteServiceProvider::HOME); */
-        return redirect('/register');
+        $mailArray = array('status'=>'Processing', 'uName'=>$request->first_name);      
+        Mail::to($request->email, $request->first_name)->send(new SendMailNotify($mailArray));
+            if((Response::HTTP_OK == 200) || (Response::HTTP_OK == 202)){
+                $info = 'Successfully registered';
+            }else{
+                $info = 'Registration Failed. Please Contact Admin.';
+            }
+        return redirect('/register')->with('message', $info);
     }
 }

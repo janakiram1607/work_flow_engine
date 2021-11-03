@@ -15,7 +15,6 @@ class SendMailNotify extends Mailable
     public function __construct($arrayofvalue)
     {
        $this->cStatus = $arrayofvalue;
-       dd($this->cStatus);
     }
     public function build()
     {

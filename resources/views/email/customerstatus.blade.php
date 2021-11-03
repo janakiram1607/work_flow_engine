@@ -1,7 +1,7 @@
 @component('mail::message')
-# {{ $cStatus['status'] ?? '' }}
+Hello {{ $cStatus['uName'] ?? 'User' }}
 
-Your WorkFlow is Rejected{{ $cStatus['status'] ?? '' }} by the Admin.
+Your WorkFlow is {{ $cStatus['status'] ?? '' }} by the Admin.
 
 Thanks,<br>
 {{ config('app.name') }}

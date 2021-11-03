@@ -10,13 +10,15 @@ class AdminController extends Controller
     public function processUser($user,$type, Request $request){
         $status = User::where('id',$user)->update(['work_flow_engine' => $type]);
         if($status){
-            $mailArray = User::find($user);          
-            Mail::to('janakiram1607@gmail.com', "Testing")->send(new SendMailNotify($mailArray));
+            $userDetail = User::find($user);
+            $mailArray = array('status'=>$userDetail->workFlow, 'uName'=>$userDetail->FullName);      
+            Mail::to($userDetail->email, $userDetail->FullName)->send(new SendMailNotify($mailArray));
             if((Response::HTTP_OK == 200) || (Response::HTTP_OK == 202)){
-                return redirect()->route('dashboard');
+                $info = 'Status Updated and Notification Sent.';
             }else{
-                dd('failed');
+                $info = 'Process Failed. Please Try Again.';
             }
+        return redirect('/dashboard')->with('message', $info);
         }
     }
 }
